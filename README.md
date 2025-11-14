@@ -1,44 +1,53 @@
-# Image Caption Generator — Usage & Overview
+# ImageCaptionGenerator — Quick README
 
-What it does
-- Loads a trained Encoder/Decoder checkpoint and a saved vocabulary, then generates a caption for a single image using the trained model.
+A minimal README with only the essential instructions to run, train, and predict.
 
-Brief description of how it works
-- Loads a checkpoint that is expected to contain the keys `encoder`, `decoder`, and `vocab` (where `vocab` is an `itos` mapping: int -> token string).
-- Reconstructs a minimal `Vocabulary` object from `vocab` and instantiates the models:
-  - `EncoderCNN` (ResNet backbone → feature vector)
-  - `DecoderRNN` (Embedding + LSTM + Linear)
-- Preprocesses the input image with the same transforms used in training (resize → normalize → tensor).
-- Performs greedy decoding starting from `<SOS>`, predicting tokens until `<EOS>` or a maximum length is reached.
+Checklist
+- Activate virtual environment and install dependencies.
+- Train the model (optional).
+- Run `predict.py` to generate a caption for an image.
+- Run the Streamlit UI with `streamlit run imageGeneratorApp.py`.
 
-Files referenced
-- `predict.py` — inference script that loads checkpoint + vocab and produces a caption for a single image.
-- `models/encoder.py` and `models/decoder.py` — model definitions required by `predict.py`.
-- `utils/vocabulary.py` — vocabulary helper class used to reconstruct `stoi`/`itos` mappings.
-
-Dependencies
-- Python 3.8+ (project used 3.12 in development but 3.8+ should work)
-- torch
-- torchvision
-- pillow (PIL)
-- nltk (only for vocabulary/tokenization if you rebuild vocab)
-
-Install dependencies (example):
-```sh
+Setup
+```zsh
+# activate venv
+source venv/bin/activate
+# install dependencies
 pip install -r requirements.txt
-# or at minimum
-pip install torch torchvision pillow nltk
 ```
 
-How to run
-1. Make sure you have a checkpoint that contains at least `encoder`, `decoder`, and `vocab` (an `itos` dict). Example: `models/checkpoint_5.pth`.
-2. Place or point to an image you want captioned.
-3. Edit the bottom of `predict.py` (or modify the variables) to set the paths, for example:
-```py
-image_path = "path/to/your/image.jpg"
-checkpoint_path = "models/checkpoint_5.pth"
+Train (optional)
+- Edit `train.py` and set absolute paths for `root_dir` (images) and `captions_file`.
+- Then run:
+```zsh
+python train.py
 ```
-4. Run the script from the project root:
-```sh
+- Checkpoints are saved to `models/` (these are ignored by `.gitignore`).
+
+Predict (single image)
+- Ensure you have a checkpoint (example: `models/checkpoint_5.pth`).
+- Edit `predict.py` to set `image_path` and `checkpoint_path`, or modify the script to accept arguments.
+- Run:
+```zsh
 python predict.py
 ```
+- `predict.py` expects the checkpoint to contain `encoder`, `decoder`, and `vocab` (an `itos` mapping).
+
+Run the Streamlit app (UI)
+- Use the Streamlit CLI so the app runs in your browser:
+```zsh
+streamlit run imageGeneratorApp.py
+```
+- Optional flags:
+```zsh
+streamlit run imageGeneratorApp.py --server.port 8502
+streamlit run imageGeneratorApp.py --server.headless true
+```
+
+Notes
+- Use absolute paths to avoid working-directory issues.
+- If DataLoader raises multiprocessing errors on macOS/Windows, ensure `train.py` is run inside `if __name__ == "__main__":` and/or set `num_workers=0` for debugging.
+- Do not commit `data/` or `models/*.pth` (they are in `.gitignore`).
+
+If you want CLI args for `predict.py` or a small launch script for Streamlit, I can add them.
+
