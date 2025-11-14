@@ -1,0 +1,59 @@
+# .gitignore for imageCaptionGenerator
+# Ignore Python cache, virtual envs, data, checkpoints and common editor files
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+venv*/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Pytest
+.pytest_cache/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints
+
+# Logs
+*.log
+
+# Database files
+*.sqlite3
+
+# NLTK data (if downloaded locally)
+nltk_data/
+
+# Dataset directory (don't commit large datasets)
+data/
+
+# Model checkpoints / weights
+models/*.pth
+
+# Caches
+.cache/
+.mypy_cache/
+
+# Environment files / secrets
+.env
+.env.*
+*.key
+*.pem
