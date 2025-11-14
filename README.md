@@ -1,4 +1,4 @@
-# predict.py — Usage & Overview
+# Image Caption Generator — Usage & Overview
 
 What it does
 - Loads a trained Encoder/Decoder checkpoint and a saved vocabulary, then generates a caption for a single image using the trained model.
@@ -42,29 +42,3 @@ checkpoint_path = "models/checkpoint_5.pth"
 ```sh
 python predict.py
 ```
-
-Example (reconstructing vocab from checkpoint):
-```py
-checkpoint = torch.load(checkpoint_path, map_location="cpu")
-vocab = Vocabulary(freq_threshold=5)
-vocab.itos = checkpoint['vocab']
-vocab.stoi = {v: k for k, v in vocab.itos.items()}
-caption = predict(image_path, checkpoint_path, vocab)
-print("Predicted Caption:", caption)
-```
-
-Notes & troubleshooting
-- Checkpoint format: `predict.py` expects `checkpoint['encoder']`, `checkpoint['decoder']`, and `checkpoint['vocab']`. If your checkpoint uses different keys, update the loading code accordingly.
-- Use absolute paths if you run from a different working directory.
-- If GPU is available, `predict.py` will use it automatically; to force CPU, set the checkpoint load `map_location` to `'cpu'` and run on CPU-only device.
-- Ensure `vocab.itos` includes `<SOS>` and `<EOS>` tokens, and rebuild `vocab.stoi` from it before running inference.
-- If output is empty or contains `<UNK>` tokens often, the checkpoint/vocab may be incompatible with the current `utils/vocabulary.py` or the model was trained with a different vocabulary.
-
-Optional improvements
-- Add argparse to `predict.py` so you can run:
-  ```sh
-  python predict.py --image path/to.jpg --checkpoint models/checkpoint_5.pth
-  ```
-- Add a small visualization that displays the image with the predicted caption.
-
-If you want, I can update `predict.py` to add `argparse` and the example visualization.
